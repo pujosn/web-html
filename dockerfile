@@ -1,8 +1,9 @@
-# Gunakan image Nginx sebagai base image
+# Gunakan image Nginx
 FROM nginx:alpine
 
+
 # Salin file HTML ke dalam direktori default Nginx
-COPY index.html /usr/share/nginx/html/index.html
+COPY index.html /usr/share/nginx/html/
 
 # Ekspose port 80 agar bisa diakses dari luar
 EXPOSE 80
