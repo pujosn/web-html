@@ -43,18 +43,22 @@ pipeline {
         //     }
 
         stage('Deploy to GKE') {
-            steps {
+             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
                     sh '''
-                    echo $KUBE_CONFIG > $GOOGLE_APPLICATION_CREDENTIALS
+                    echo "Checking Google Credentials: $GOOGLE_APPLICATION_CREDENTIALS"
                     ls -l $GOOGLE_APPLICATION_CREDENTIALS
-                    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+                    cp $GOOGLE_APPLICATION_CREDENTIALS /tmp/gcp-key.json
+                    chmod 600 /tmp/gcp-key.json
+
+                    gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
                     gcloud container clusters get-credentials 'cluster-project' --zone asia-southeast2-a --project 'project-akhir-453413'
                     kubectl apply -f deployment.yaml
                     '''
                 }
             }
         }
+
 
         // stage('Monitor with Prometheus & Grafana') {
         //     steps {
