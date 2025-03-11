@@ -20,7 +20,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t $pujosn/simple-web:1.1.0 .'
+                    sh 'docker build -t $DOCKER_IMAGE:latest .'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/']) {
-                    sh 'docker push $pujosn/simple-web:1.1.0'
+                    sh 'docker build -t $DOCKER_IMAGE:latest'
                 }
             }
         }
@@ -47,16 +47,16 @@ pipeline {
             }
         }
 
-        stage('Monitor with Prometheus & Grafana') {
-            steps {
-                script {
-                    sh '''
-                    kubectl apply -f k8s/monitoring/prometheus.yaml
-                    kubectl apply -f k8s/monitoring/grafana.yaml
-                    '''
-                }
-            }
-        }
+        // stage('Monitor with Prometheus & Grafana') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //             kubectl apply -f k8s/monitoring/prometheus.yaml
+        //             kubectl apply -f k8s/monitoring/grafana.yaml
+        //             '''
+        //         }
+        //     }
+        // }
     }
 
     post {
