@@ -50,8 +50,8 @@ pipeline {
                     ls -l $GOOGLE_APPLICATION_CREDENTIALS
                     cp $GOOGLE_APPLICATION_CREDENTIALS /tmp/gcp-key.json
                     chmod 600 /tmp/gcp-key.json
-
                     gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
+                    export USE_GKE_GCLOUD_AUTH_PLUGIN=True
                     gcloud container clusters get-credentials 'cluster-project' --zone asia-southeast2-a --project 'project-akhir-453413'
                     kubectl apply -f deployment.yaml
                     '''
