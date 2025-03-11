@@ -46,8 +46,8 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    echo $KUBE_CONFIG > $WORKSPACE/gcp-key.json
-                    gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
+                    echo $KUBE_CONFIG > $GOOGLE_APPLICATION_CREDENTIALS
+                    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
                     gcloud container clusters get-credentials 'cluster-project' --zone asia-southeast2-a --project 'project-akhir-453413'
                     kubectl apply -f deployment.yaml
                     '''
