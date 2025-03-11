@@ -20,7 +20,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t $DOCKER_IMAGE:latest .'
+                    sh 'sudo docker build -t pujosn/simple-web:1.1.0 .'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/']) {
-                    sh 'docker build -t $DOCKER_IMAGE:latest'
+                    sh 'sudo docker build -t pujosn/simple-web:1.1.0'
                 }
             }
         }
@@ -39,9 +39,8 @@ pipeline {
                     sh '''
                     echo $KUBE_CONFIG > /tmp/gcp-key.json
                     gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
-                    gcloud container clusters get-credentials my-gke-cluster --zone asia-southeast2-a --project my-gcp-project
-                    kubectl apply -f k8s/deployment.yaml
-                    kubectl apply -f k8s/service.yaml
+                    gcloud container clusters get-credentials 'cluster-project' --zone asia-southeast2-a --project 'project-akhir-453413'
+                    kubectl apply -f deployment.yaml
                     '''
                 }
             }
