@@ -33,11 +33,20 @@ pipeline {
             }
         }
 
+        stage('push gke') {
+            steps {
+                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
+            }
+        }
+
+            }
+
         stage('Deploy to GKE') {
             steps {
                 script {
                     sh '''
-                    echo $KUBE_CONFIG > /tmp/gcp-key.json
+                    echo $KUBE_CONFIG > $WORKSPACE/gcp-key.json
                     gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
                     gcloud container clusters get-credentials 'cluster-project' --zone asia-southeast2-a --project 'project-akhir-453413'
                     kubectl apply -f deployment.yaml
