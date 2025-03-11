@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', credentialsId: 'github-ssh', url: 'git@github.com:pujosn/web-html.git'
+                git branch: 'master', credentialsId: 'git', url: 'git@github.com:pujosn/web-html.git'
             }
         }
 
