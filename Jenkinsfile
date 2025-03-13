@@ -7,7 +7,7 @@ pipeline {
         GIT_REPO = 'git@github.com:pujosn/web-html.git'
         GCP_PROJECT = 'project-akhir-453413'
         GKE_ZONE = 'asia-southeast2-a'
-        CLUSTER_NAME = 'cluster-project'
+        CLUSTER_NAME = 'cluster-development'
     }
 
     stages {
