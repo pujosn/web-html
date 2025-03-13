@@ -48,13 +48,13 @@ pipeline {
         }          
     }
 
-    post {
-        success {
-            echo 'Deployment berhasil!'
-        }
-        failure {
-            echo 'Deployment gagal!'
+        post {
+            success {
+                echo 'Deployment berhasil!'
+            }
+            failure {
+                echo 'Deployment gagal!'
+            }
         }
     }
- }
 }
