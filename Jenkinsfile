@@ -36,12 +36,16 @@ pipeline {
 
         stage('Deploy to GKE') {
             steps {
-                withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-                    gcloud container clusters get-credentials cluster-development --zone asia-southeast2 --project your-gcp-project
-                    kubectl apply -f deployment.yaml       
+                script {
+                    sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
+                    sh 'gcloud container clusters get-credentials cluster-development --zone asia-southeast2 --project sanji-453509'
+                    sh 'kubectl apply -f deployment.yaml'
+                }
             }
         }
+                
+            
+        
     }
 
     post {
