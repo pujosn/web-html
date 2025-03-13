@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: "${GITHUB_REPO}"
+                git branch: 'master', url: "${GITHUB_REPO}"
             }
         }
 
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     // Login ke Docker Hub
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') { // Ganti dengan credential Docker Hub
+                    docker.withRegistry('https://index.docker.io/v1/', 'pujosn/simple-web') { // Ganti dengan credential Docker Hub
                         docker.image("${DOCKER_IMAGE}").push()
                     }
                 }
