@@ -41,10 +41,10 @@ pipeline {
                     gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
                     gcloud container clusters get-credentials cluster-development --zone asia-southeast2 --project your-gcp-project
                     kubectl apply -f deployment.yaml
-                    '''
-                }
+                    '''            
             }
         }
+    }
 
     post {
         success {
