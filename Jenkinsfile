@@ -2,51 +2,51 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'pujosn/simple-web:1.1.0'
-        KUBE_CONFIG = credentials('kubeconfig')
-        GIT_REPO = 'git@github.com:pujosn/web-html.git'
-        GCP_PROJECT = 'project-akhir-453413'
-        GKE_ZONE = 'asia-southeast2-a'
-        CLUSTER_NAME = 'cluster-development'
+        DOCKER_IMAGE = "pujosn/simple-web"
+        DOCKER_TAG = "1.1.0"
+        GKE_CLUSTER = "cluster-development"
+        GCP_PROJECT = "sanji-453509"
+        DEPLOYMENT_NAME = "simple-web-deployment"
+        CONTAINER_NAME = "simple-web"
+        zone = "asia-southeast2-a"
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                git branch: 'master', url: "${GITHUB_REPO}"
+                git 'git@github.com:pujosn/web-html.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Membangun image Docker
-                    docker.build("${DOCKER_IMAGE}")
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                 }
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push to Docker Hub') {
             steps {
-                script {
-                    // Login ke Docker Hub
-                    docker.withRegistry('https://index.docker.io/v1/', 'pujosn/simple-web') { // Ganti dengan credential Docker Hub
-                        docker.image("${DOCKER_IMAGE}").push()
-                    }
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                    sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to GKE') {
             steps {
                 script {
-                    // Mengkonfigurasi kubectl menggunakan kubeconfig
-                    writeFile(file: 'kubeconfig', text: "${KUBE_CONFIG}")
-                    sh 'gcloud auth activate-service-account --key-file=kubeconfig'
-                    sh "gcloud container clusters get-credentials ${GKE_CLUSTER} --zone ${GKE_ZONE}"
-                    
-                    // Melakukan deploy ke Kubernetes
-                    sh "kubectl set image deployment/web-deployment web=${DOCKER_IMAGE}"
+                    // Auth ke GCP
+                    sh "gcloud auth activate-service-account --key-file=\$GOOGLE_APPLICATION_CREDENTIALS"
+                    sh "gcloud config set project ${GCP_PROJECT}"
+                    sh "gcloud container clusters get-credentials ${GKE_CLUSTER} --zone ${ZONE}"
+
+                    // Deploy ke Kubernetes
+                    sh """
+                    kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${DOCKER_IMAGE}:${DOCKER_TAG} --record
+                    kubectl rollout status deployment/${DEPLOYMENT_NAME}
+                    """
                 }
             }
         }
@@ -54,10 +54,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment completed successfully!'
+            echo 'Deployment berhasil!'
         }
         failure {
-            echo 'Deployment failed. Please check the logs.'
+            echo 'Deployment gagal!'
         }
     }
 }
