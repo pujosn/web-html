@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'pujosn/simple-web:1.1.0'
-        KUBE_CONFIG = credentials('gcp-key')
+        KUBE_CONFIG = credentials('kubeconfig')
         GIT_REPO = 'git@github.com:pujosn/web-html.git'
         GCP_PROJECT = 'project-akhir-453413'
         GKE_ZONE = 'asia-southeast2-a'
@@ -13,71 +13,51 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'git@github.com:pujosn/web-html.git'
+                git branch: 'main', url: "${GITHUB_REPO}"
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t pujosn/simple-web:1.1.0 .'
+                    // Membangun image Docker
+                    docker.build("${DOCKER_IMAGE}")
                 }
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/']) {
-                    sh 'docker build -t pujosn/simple-web:1.1.0 .'
+                script {
+                    // Login ke Docker Hub
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') { // Ganti dengan credential Docker Hub
+                        docker.image("${DOCKER_IMAGE}").push()
+                    }
                 }
             }
         }
 
-        // stage('push gke') {
-        //     steps {
-        //         withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-        //             sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
-        //     }
-        // }
-
-        //     }
-
-        stage('Deploy to GKE') {
-             steps {
-                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                    sh '''
-                    echo "Checking Google Credentials: $GOOGLE_APPLICATION_CREDENTIALS"
-                    ls -l $GOOGLE_APPLICATION_CREDENTIALS
-                    cp $GOOGLE_APPLICATION_CREDENTIALS /tmp/gcp-key.json
-                    chmod 600 /tmp/gcp-key.json
-                    gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
-                    export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-                    gcloud container clusters get-credentials 'cluster-project' --zone asia-southeast2-a --project 'project-akhir-453413'
-                    kubectl apply -f deployment.yaml
-                    '''
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Mengkonfigurasi kubectl menggunakan kubeconfig
+                    writeFile(file: 'kubeconfig', text: "${KUBE_CONFIG}")
+                    sh 'gcloud auth activate-service-account --key-file=kubeconfig'
+                    sh "gcloud container clusters get-credentials ${GKE_CLUSTER} --zone ${GKE_ZONE}"
+                    
+                    // Melakukan deploy ke Kubernetes
+                    sh "kubectl set image deployment/web-deployment web=${DOCKER_IMAGE}"
                 }
             }
         }
-
-
-        // stage('Monitor with Prometheus & Grafana') {
-        //     steps {
-        //         script {
-        //             sh '''
-        //             kubectl apply -f k8s/monitoring/prometheus.yaml
-        //             kubectl apply -f k8s/monitoring/grafana.yaml
-        //             '''
-        //         }
-        //     }
-        // }
     }
 
     post {
         success {
-            echo 'Deployment Success!'
+            echo 'Deployment completed successfully!'
         }
         failure {
-            echo 'Deployment Failed!'
+            echo 'Deployment failed. Please check the logs.'
         }
     }
 }
