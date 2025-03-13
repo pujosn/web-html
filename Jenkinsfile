@@ -56,4 +56,5 @@ pipeline {
             echo 'Deployment gagal!'
         }
     }
+ }
 }
