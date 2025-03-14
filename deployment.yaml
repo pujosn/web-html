@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: simple-app
-        image: pujosn/web-app:1.0.0
+        image: pujosn/web-app:1.1.0
         imagePullPolicy: Always
         resources:
           limits:
