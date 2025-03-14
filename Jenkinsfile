@@ -22,8 +22,8 @@ pipeline {
         stage('Build Docker Image and Test') {
             steps {
                 script {
-                    sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
-                    sh 'docker run --rm ${DOCKER_IMAGE} /bin/sh -c echo "Running Tests"'
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    sh "docker run --rm ${DOCKER_IMAGE}:${DOCKER_TAG} /bin/sh -c echo 'Running Tests'"
                 }
             }
         }
