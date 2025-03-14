@@ -3,7 +3,7 @@ FROM nginx:alpine
 
 
 # Salin file HTML ke dalam direktori default Nginx
-COPY index.html /usr/share/nginx/html/
+COPY index.html /usr/share/nginx/html/index.html
 
 # Ekspose port 80 agar bisa diakses dari luar
 EXPOSE 80
