@@ -19,10 +19,11 @@ pipeline {
         }
         // update IP publik
 
-        stage('Build Docker Image') {
+        stage('Build Docker Image and Test') {
             steps {
                 script {
                     sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    sh 'docker run --rm ${DOCKER_IMAGE} /bin/sh -c "echo Running Test"'
                 }
             }
         }
