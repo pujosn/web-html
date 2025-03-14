@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "pujosn/simple-web"
-        DOCKER_TAG = "1.1.2"
+        DOCKER_TAG = "1.1.1"
         GKE_CLUSTER = "cluster-development"
         GCP_PROJECT = "sanji-453509"
         DEPLOYMENT_NAME = "simple-web-deployment"

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: simple-web
-        image: pujosn/simple-web:1.1.0
+        image: pujosn/simple-web:1.1.1
         resources:
           limits:
             memory: "20Mi"
