@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "pujosn/simple-web"
-        DOCKER_TAG = "latest"
+        DOCKER_IMAGE = "pujosn/web-app"
+        DOCKER_TAG = "1.1.0"
         GKE_CLUSTER = "cluster-development"
         GCP_PROJECT = "sanji-453509"
-        DEPLOYMENT_NAME = "simple-web-deployment"
-        CONTAINER_NAME = "simple-web"
+        DEPLOYMENT_NAME = "simple-app-deployment"
+        CONTAINER_NAME = "simple-app"
         zone = "asia-southeast2-a"
     }
 

@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple-web
+  name: simple-app
 spec:
   # revisionHistoryLimit: 5
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: simple-web
+      app: simple-app
   template:
     metadata:
       labels:
-        app: simple-web
+        app: simple-app
       # namespace: backend
     spec:
       containers:
-      - name: simple-web
-        image: pujosn/simple-web:latest
+      - name: simple-app
+        image: pujosn/web-app:1.0.0
         imagePullPolicy: Always
         resources:
           limits:
@@ -30,10 +30,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: simple-web-service
+  name: simple-app-service
 spec:
   selector:
-    app: simple-web
+    app: simple-app
   ports:
   - protocol: TCP
     port: 8080
