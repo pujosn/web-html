@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                    sh "docker run --rm ${DOCKER_IMAGE} /bin/sh -c 'echo Running Test'"
+                    sh  docker run --rm ${DOCKER_IMAGE} /bin/sh -c echo "echo Running Tests"
                 }
             }
         }
