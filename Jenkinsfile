@@ -17,6 +17,7 @@ pipeline {
                 git 'git@github.com:pujosn/web-html.git'
             }
         }
+        // update IP publik
 
         stage('Build Docker Image') {
             steps {
