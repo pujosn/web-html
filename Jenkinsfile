@@ -9,8 +9,6 @@ pipeline {
         DEPLOYMENT_NAME = "simple-app-deployment"
         CONTAINER_NAME = "simple-app"
         zone = "asia-southeast2-a"
-        SERVICE_PORT = "9090"
-        EXTERNAL_IP = "34.101.133.48"
     }
 
     stages {
@@ -57,7 +55,7 @@ pipeline {
                 sh "kubectl expose deployment $DEPLOYMENT_NAME --type=LoadBalancer --name=$DEPLOYMENT_NAME-service --port=$SERVICE_PORT --target-port=$SERVICE_PORT"
             }
         }
-    }        
+    }    
 }
 
     post {
@@ -68,6 +66,6 @@ pipeline {
            echo 'Deployment gagal!'
        }
     }
-}
+
 
         
