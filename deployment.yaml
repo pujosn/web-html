@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple-app-9090
+  name: simple-app
 spec:
   # revisionHistoryLimit: 5
   replicas: 3
@@ -30,12 +30,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: simple-app-9090-service
+  name: simple-app-service
 spec:
   selector:
     app: simple-app
   ports:
   - protocol: TCP
-    port: 9090
-    targetPort: 9090
+    port: 8080
+    targetPort: 80
   type: LoadBalancer

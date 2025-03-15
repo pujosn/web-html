@@ -6,11 +6,9 @@ pipeline {
         DOCKER_TAG = "1.1.2"
         GKE_CLUSTER = "cluster-development"
         GCP_PROJECT = "sanji-453509"
-        DEPLOYMENT_NAME = "simple-app-9090"
+        DEPLOYMENT_NAME = "simple-app-deployment"
         CONTAINER_NAME = "simple-app"
         zone = "asia-southeast2-a"
-        SERVICE_PORT = "9090"
-        EXTERNAL_IP = "34.101.133.48"
     }
 
     stages {
@@ -38,28 +36,20 @@ pipeline {
             }
         }
 
-        stage('Deploy to GKE') {
-            steps {
-                script {
-                    withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) { 
-                    sh '''
-                    gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-                    gcloud container clusters get-credentials cluster-development --zone asia-southeast2-a --project sanji-453509
-                    kubectl apply -f deployment.yaml
-                    '''
-                }
-            }          
-        }
-    }
-
-            stage('Expose Service') {
+            stage('Deploy to GKE') {
                 steps {
                     script {
-                    sh "kubectl expose deployment ${DEPLOYMENT_NAME} --type=LoadBalancer --name=${DEPLOYMENT_NAME}-service --port=${SERVICE_PORT} --target-port=${SERVICE_PORT}"
-                }
-            } 
+                        withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) { 
+                        sh '''
+                        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+                        gcloud container clusters get-credentials cluster-development --zone asia-southeast2-a --project sanji-453509
+                        kubectl apply -f deployment.yaml
+                        '''
+                    }
+                }          
+            }
         }
-    }    
+    }
 }
 
     post {
