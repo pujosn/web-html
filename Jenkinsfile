@@ -50,7 +50,7 @@ pipeline {
             }
         }
     }
-}
+
 
     post {
        success {
@@ -60,6 +60,6 @@ pipeline {
            echo 'Deployment gagal!'
        }
     }
-
+}
 
         
