@@ -30,12 +30,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: simple-app-8080-service
+  name: simple-app-9090-service
 spec:
   selector:
     app: simple-app
   ports:
   - protocol: TCP
-    port: 8080
-    targetPort: 80
+    port: 9090
+    targetPort: 9090
   type: LoadBalancer
