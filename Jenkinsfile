@@ -6,7 +6,7 @@ pipeline {
         DOCKER_TAG = "1.1.2"
         GKE_CLUSTER = "cluster-development"
         GCP_PROJECT = "sanji-453509"
-        DEPLOYMENT_NAME = "simple-app"
+        DEPLOYMENT_NAME = "simple-app-9090"
         CONTAINER_NAME = "simple-app"
         zone = "asia-southeast2-a"
         SERVICE_PORT = "9090"

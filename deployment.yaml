@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple-app
+  name: simple-app-9090
 spec:
   # revisionHistoryLimit: 5
   replicas: 3
