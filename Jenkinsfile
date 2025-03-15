@@ -50,12 +50,14 @@ pipeline {
                 }
             }          
         }
-    }
+    
 
-    stage('Expose Service')
-        steps {
-            sh "kubectl expose deployment $DEPLOYMENT_NAME --type=LoadBalancer --name=$DEPLOYMENT_NAME-service --port=$SERVICE_PORT --target-port=$SERVICE_PORT"
-        }
+        stage('Expose Service') {
+            steps {
+                sh "kubectl expose deployment $DEPLOYMENT_NAME --type=LoadBalancer --name=$DEPLOYMENT_NAME-service --port=$SERVICE_PORT --target-port=$SERVICE_PORT"
+            }
+        }  
+    }      
 }
 
     post {
